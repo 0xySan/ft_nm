@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 17:05:30 by etaquet           #+#    #+#             */
-/*   Updated: 2025/06/07 15:16:50 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/06/24 23:16:47 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,6 @@ int getAndPrintElf(t_all elf, t_elf64 *elf64, int fd, size_t filesize, char *fil
 	}
 	elf64->elf = mapped;
 	elf64->sections = (void *)((char *)mapped + elf64->elf->e_shoff);
-	// Elf64_Shdr *strtab = &elf.sections[elf.elf->e_shstrndx];
-	// printf("%d %lu\n", elf.elf->e_shnum, elf.elf->e_shoff);
-	// for (int i = 0; i < elf.elf->e_shnum; i++)
-	//     printf("%u\n", elf.elf->e_shstrndx);
-	// write(1, (char *)elf.elf + strtab->sh_offset, strtab->sh_size);
-	// write(1, "\n", 1);
 	elf64->symname = &elf64->sections[elf64->elf->e_shstrndx - 1];
 	elf64->symtab = &elf64->sections[elf64->elf->e_shstrndx - 2];
 	Elf64_Sym *sym = (void *)elf64->elf + elf64->symtab->sh_offset + sizeof(Elf64_Sym);
@@ -125,14 +119,11 @@ int getAndPrintElf(t_all elf, t_elf64 *elf64, int fd, size_t filesize, char *fil
 	
 	for (int i = 0; i < symnb; i++)
 	{
-		// printf("more info = %u, %u, %u\n", sym[i].st_info, sym[i].st_shndx, symnb);
-		// ft_dprintf(1, "symname = %x : %s\n", sym[i].st_value, (char *)elf64->elf + elf64->symname->sh_offset + sym[i].st_name);
 		if (!sym)
 			continue ;
 		elf.info[i].name = strdup((char *)elf64->elf + elf64->symname->sh_offset + sym[i].st_name);
 		elf.info[i].address = malloc(sizeof(char) * (16 + 1));
 		elf.info[i].symbol = getSymbol64(elf, &sym[i]);
-		// printf("%d, %d\n", symnb, sym[i].st_shndx);
 		itoa_hex(sym[i].st_value, elf.info[i].address);
 	}
 	elf.info[symnb].name = NULL;
@@ -151,7 +142,7 @@ int getAndPrintElf(t_all elf, t_elf64 *elf64, int fd, size_t filesize, char *fil
 		if (elf.info[i].symbol == 'a')
 			continue ;
 		printfFullAdress(elf.info[i].address, elf.info[i].symbol);
-		dprintf(1, " %c %s\n", elf.info[i].symbol, elf.info[i].name);
+		ft_dprintf(1, " %c %s\n", elf.info[i].symbol, elf.info[i].name);
 	}
 
 	for (int i = 0; i < symnb; i++)
