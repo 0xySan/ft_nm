@@ -6,7 +6,7 @@
 /*   By: etaquet <etaquet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 17:05:30 by etaquet           #+#    #+#             */
-/*   Updated: 2025/06/24 23:16:47 by etaquet          ###   ########.fr       */
+/*   Updated: 2025/07/15 18:45:41 by etaquet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	itoa_hex(size_t value, char *buf)
 
 void printfFullAdress(char *address, char symbol)
 {
-	if (address && address[0] == '0' && symbol == 'a')
+	if (address && address[0] == '0' && (symbol == 'a' || symbol == 'T'))
 	{
 		ft_dprintf(1, "0000000000000000");
 		return ;
@@ -139,7 +139,7 @@ int getAndPrintElf(t_all elf, t_elf64 *elf64, int fd, size_t filesize, char *fil
 
 	for (int i = 0; i < symnb; i++)
 	{
-		if (elf.info[i].symbol == 'a')
+		if (elf.info[i].symbol == 'a' || elf.info[i].symbol == 't' || elf.info[i].symbol == 'r')
 			continue ;
 		printfFullAdress(elf.info[i].address, elf.info[i].symbol);
 		ft_dprintf(1, " %c %s\n", elf.info[i].symbol, elf.info[i].name);
